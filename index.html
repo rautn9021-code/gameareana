@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>BubbleVerse · Mindful Sorting Game</title>
+  <title>Game Arena · Mindful Game Collection</title>
   <style>
     * {
       margin: 0;
@@ -12,321 +12,513 @@
     }
 
     body {
-      background: linear-gradient(145deg, #eef2f5 0%, #d9e2e8 100%);
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: linear-gradient(145deg, #e8f0f0 0%, #d3dfdd 100%);
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'Poppins', sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* animated background grain effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
     }
 
     .app-wrapper {
       max-width: 1400px;
-      width: 100%;
       margin: 0 auto;
-      padding: 24px 28px 40px;
+      padding: 28px 32px 50px;
+      position: relative;
+      z-index: 2;
     }
 
-    /* header & navigation */
-    .site-header {
+    /* header with floating animation */
+    .game-header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
+      gap: 24px;
       margin-bottom: 48px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(45, 75, 85, 0.2);
+      padding-bottom: 22px;
+      border-bottom: 2px solid rgba(70, 100, 85, 0.25);
+      backdrop-filter: blur(2px);
     }
 
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      font-size: 44px;
-      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
-    }
-
-    .logo-text h1 {
-      font-size: 1.9rem;
+    .logo h1 {
+      font-size: 2.6rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #1e5f6e, #32936f);
+      background: linear-gradient(135deg, #1d6f5c, #e5903a);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.5px;
+      letter-spacing: -1px;
+      animation: fadeSlide 0.6s ease-out;
     }
 
-    .logo-text p {
-      font-size: 0.8rem;
-      color: #4d6a78;
+    .logo p {
+      color: #567a6b;
       font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
     }
 
     .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 32px;
       flex-wrap: wrap;
     }
 
     .nav-links a {
       text-decoration: none;
       font-weight: 600;
-      color: #2c5f6b;
-      transition: 0.2s;
-      font-size: 1rem;
-      padding: 6px 0;
+      color: #2c6b5a;
+      transition: all 0.2s;
+      font-size: 1.05rem;
+      padding: 6px 4px;
       border-bottom: 2px solid transparent;
     }
 
     .nav-links a:hover {
       color: #dd9230;
       border-bottom-color: #dd9230;
+      transform: translateY(-2px);
     }
 
-    /* Hero section */
-    .hero {
-      background: rgba(255, 250, 235, 0.7);
-      backdrop-filter: blur(4px);
-      border-radius: 56px;
-      padding: 42px 38px;
-      margin-bottom: 56px;
+    /* hero with soft pulse */
+    .hero-section {
       text-align: center;
-      box-shadow: 0 12px 25px -12px rgba(0,0,0,0.15);
-      border: 1px solid rgba(255,255,210,0.6);
+      margin-bottom: 64px;
+      animation: glowUp 0.8s ease;
     }
 
-    .hero h2 {
-      font-size: 2.7rem;
-      font-weight: 800;
-      color: #1e4a5f;
-      margin-bottom: 16px;
+    .hero-section h2 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #285f50;
+      margin-bottom: 14px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.05);
     }
 
-    .hero p {
+    .hero-section p {
       font-size: 1.2rem;
-      color: #446b71;
-      max-width: 700px;
+      color: #588072;
+      max-width: 650px;
       margin: 0 auto;
     }
 
-    /* game card grid */
-    .games-section {
-      margin: 30px 0 50px;
+    /* game grid - modern card design */
+    .games-headline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .section-title {
-      font-size: 2rem;
+    .games-headline h3 {
+      font-size: 1.9rem;
       font-weight: 700;
-      color: #1b4e5c;
-      margin-bottom: 28px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      color: #2c5a48;
+      letter-spacing: -0.3px;
+    }
+
+    .games-headline span {
+      background: #decdac;
+      padding: 6px 16px;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #4b5e4a;
     }
 
     .game-grid {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start;
+      justify-content: center;
       gap: 32px;
+      margin-top: 20px;
+      margin-bottom: 70px;
     }
 
+    /* animated game cards */
     .game-card {
-      background: #ffffffdd;
-      backdrop-filter: blur(2px);
-      border-radius: 48px;
-      width: 320px;
-      transition: all 0.25s ease;
-      box-shadow: 0 18px 28px -12px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 252, 240, 0.92);
+      backdrop-filter: blur(4px);
+      border-radius: 56px;
+      width: 280px;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
       overflow: hidden;
-      border: 1px solid #fbe6b0;
-      cursor: pointer;
       text-decoration: none;
       display: block;
       color: inherit;
+      border: 1px solid #fff1db;
+      animation: cardFloatIn 0.5s ease backwards;
     }
+
+    .game-card:nth-child(1) { animation-delay: 0.05s; }
+    .game-card:nth-child(2) { animation-delay: 0.1s; }
+    .game-card:nth-child(3) { animation-delay: 0.15s; }
+    .game-card:nth-child(4) { animation-delay: 0.2s; }
+    .game-card:nth-child(5) { animation-delay: 0.25s; }
 
     .game-card:hover {
-      transform: translateY(-10px);
-      background: white;
-      box-shadow: 0 28px 36px -14px rgba(0, 0, 0, 0.25);
+      transform: translateY(-14px) scale(1.02);
+      background: #ffffff;
+      box-shadow: 0 32px 44px -16px rgba(0, 0, 0, 0.3);
+      border-color: #ffdfa5;
     }
 
-    .card-img {
-      background: linear-gradient(145deg, #9fd1c2, #70b6a4);
-      padding: 32px 16px;
+    .card-icon {
+      background: linear-gradient(145deg, #c9e0d6, #b7cfc2);
       text-align: center;
-      font-size: 68px;
+      padding: 36px 16px 28px;
+      font-size: 74px;
+      transition: 0.2s;
     }
 
-    .card-info {
-      padding: 24px 20px 28px;
+    .game-card:hover .card-icon {
+      transform: scale(1.02);
     }
 
-    .card-info h3 {
-      font-size: 1.8rem;
+    .card-details {
+      padding: 26px 22px 32px;
+    }
+
+    .card-details h4 {
+      font-size: 1.9rem;
       font-weight: 800;
-      color: #2f6b5e;
-      margin-bottom: 10px;
+      color: #316b5b;
+      margin-bottom: 12px;
     }
 
-    .card-info p {
-      color: #5e6f6b;
-      line-height: 1.4;
-      font-weight: 500;
+    .card-details p {
+      color: #6c8176;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-bottom: 18px;
     }
 
-    .badge {
-      display: inline-block;
-      background: #ffde9c;
-      border-radius: 60px;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-top: 14px;
-      color: #6b4c2c;
+    .play-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f2e2c0;
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #6e522c;
+      transition: 0.2s;
+    }
+
+    .game-card:hover .play-tag {
+      background: #e7cf9e;
+      gap: 12px;
     }
 
     /* footer */
-    .site-footer {
-      margin-top: 70px;
-      border-top: 1px solid #cbdadf;
+    .footer {
+      margin-top: 40px;
+      border-top: 1px solid #c6d8cf;
       padding-top: 32px;
       text-align: center;
     }
 
     .footer-links {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 28px;
-      margin-bottom: 24px;
+      gap: 36px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .footer-links a {
       text-decoration: none;
-      color: #366d6b;
+      color: #4b7b6a;
       font-weight: 500;
-      font-size: 0.9rem;
       transition: 0.2s;
     }
 
     .footer-links a:hover {
-      color: #dc8e3a;
+      color: #e07d2c;
       text-decoration: underline;
     }
 
     .copyright {
       font-size: 0.75rem;
-      color: #6c8b8a;
+      color: #799281;
     }
 
-    @media (max-width: 700px) {
+    /* animations */
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glowUp {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes cardFloatIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* responsive */
+    @media (max-width: 750px) {
       .app-wrapper {
-        padding: 16px 18px 30px;
+        padding: 18px 20px 36px;
       }
-      .hero h2 {
-        font-size: 1.8rem;
+      .logo h1 {
+        font-size: 1.9rem;
       }
-      .hero p {
-        font-size: 1rem;
+      .hero-section h2 {
+        font-size: 2rem;
       }
       .game-card {
         width: 100%;
         max-width: 340px;
-        margin: 0 auto;
       }
-      .game-grid {
-        justify-content: center;
-      }
-      .section-title {
-        font-size: 1.6rem;
-      }
-      .logo-text h1 {
+      .games-headline h3 {
         font-size: 1.5rem;
       }
     }
 
-    @media (max-width: 480px) {
-      .site-header {
-        flex-direction: column;
-        text-align: center;
-      }
-      .hero {
-        padding: 28px 20px;
-      }
+    /* subtle floating leaves decoration */
+    .leaf-bg {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      font-size: 90px;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-15deg);
     }
   </style>
 </head>
 <body>
+
 <div class="app-wrapper">
-  <!-- header with navigation (links to separate pages) -->
-  <header class="site-header">
-    <div class="logo-area">
-      <div class="logo-icon">🧩💧</div>
-      <div class="logo-text">
-        <h1>BubbleVerse</h1>
-        <p>calm · logic · bubble sorting</p>
-      </div>
+  <header class="game-header">
+    <div class="logo">
+      <h1>🎮 Game Arena</h1>
+      <p>where stress fades · five gentle escapes</p>
     </div>
     <div class="nav-links">
-      <a href="index.html" style="border-bottom-color: #dd9230;">Home</a>
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="bubble-game.html">🎮 Play Game</a>
+      <a href="#" id="homeLink" style="border-bottom-color: #dd9230;">🏠 Home</a>
+      <a href="#" id="aboutLink">📖 About Us</a>
+      <a href="#" id="privacyLink">🔒 Privacy</a>
     </div>
   </header>
 
-  <!-- hero section -->
-  <div class="hero">
-    <h2>🧘 unwind · sort · flow</h2>
-    <p>Experience the gentle art of bubble sorting. Relaxing puzzles, endless calm. Click the game below and dive into a refreshing challenge.</p>
+  <div class="hero-section" id="heroArea">
+    <h2>✨ pick a game, breathe deep ✨</h2>
+    <p>each game is a separate world — click any card to explore</p>
   </div>
 
-  <!-- main game feature card (links directly to bubble-game.html) -->
-  <div class="games-section">
-    <div class="section-title">
-      <span>🎮</span> <span>featured game</span>
-    </div>
-    <div class="game-grid">
-      <a href="bubble-game.html" class="game-card">
-        <div class="card-img">
-          🫧🔵🔴🟢
-        </div>
-        <div class="card-info">
-          <h3>Bubble Sort Puzzle</h3>
-          <p>Sort colored bubbles by pouring between tubes. Relaxing logic puzzle with satisfying poofs.</p>
-          <div class="badge">✨ play now · stress relief</div>
-        </div>
-      </a>
-      <!-- decorative second card (coming soon) -->
-      <div class="game-card" style="opacity:0.6; cursor:default;">
-        <div class="card-img" style="background:#b8cfc4;">
-          🌊🌀
-        </div>
-        <div class="card-info">
-          <h3>Zen Ripples</h3>
-          <p>Coming soon — gentle water meditation game.</p>
-          <div class="badge">🕯️ in development</div>
-        </div>
+  <div class="games-headline">
+    <h3>🌿 calming collection</h3>
+    <span>5 unique experiences</span>
+  </div>
+
+  <div class="game-grid" id="gameGridContainer">
+    <!-- GAME CARD 1: Bubble Sort -->
+    <a href="bubble-game.html" class="game-card" id="card-bubble">
+      <div class="card-icon">🫧🔵🔴</div>
+      <div class="card-details">
+        <h4>Bubble Sort</h4>
+        <p>Pour & match colored liquids. soothing logic puzzle with gentle undos.</p>
+        <div class="play-tag">▶ play now</div>
       </div>
-    </div>
+    </a>
+
+    <!-- GAME CARD 2: Sand Drawing -->
+    <a href="sand-game.html" class="game-card" id="card-sand">
+      <div class="card-icon">🏖️✨</div>
+      <div class="card-details">
+        <h4>Sand Drawing</h4>
+        <p>Drag your finger to draw peaceful patterns in zen sand.</p>
+        <div class="play-tag">▶ draw freely</div>
+      </div>
+    </a>
+
+    <!-- GAME CARD 3: Leaf Dropping -->
+    <a href="leaf-game.html" class="game-card" id="card-leaf">
+      <div class="card-icon">🍂🍃</div>
+      <div class="card-details">
+        <h4>Leaf Dropping</h4>
+        <p>Tap to release autumn leaves — watch them twirl down slowly.</p>
+        <div class="play-tag">▶ let it fall</div>
+      </div>
+    </a>
+
+    <!-- GAME CARD 4: Zen Ripples -->
+    <a href="ripple-game.html" class="game-card" id="card-ripple">
+      <div class="card-icon">💧🌊</div>
+      <div class="card-details">
+        <h4>Zen Ripples</h4>
+        <p>Click anywhere on water and watch expanding rings of calm.</p>
+        <div class="play-tag">▶ tap & breathe</div>
+      </div>
+    </a>
+
+    <!-- GAME CARD 5: Cloud Catcher -->
+    <a href="cloud-game.html" class="game-card" id="card-cloud">
+      <div class="card-icon">☁️✨</div>
+      <div class="card-details">
+        <h4>Cloud Catcher</h4>
+        <p>Catch drifting clouds with gentle clicks. dreamy relaxation.</p>
+        <div class="play-tag">▶ float away</div>
+      </div>
+    </a>
   </div>
 
-  <footer class="site-footer">
+  <footer class="footer">
     <div class="footer-links">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="bubble-game.html">Bubble Game</a>
+      <a href="#" id="footerAbout">📖 About Us</a>
+      <a href="#" id="footerPrivacy">🔒 Privacy Policy</a>
     </div>
     <div class="copyright">
-      © 2025 BubbleVerse — mindful gaming sanctuary. All interactions are local & safe.
+      © 2025 Game Arena — mindful moments. all games are separate pages, no stress, endless calm.
     </div>
   </footer>
 </div>
+<div class="leaf-bg">🍃</div>
+
+<!-- MODAL for About & Privacy (lightbox - no external page needed) -->
+<div id="infoModal" class="modal-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); backdrop-filter: blur(8px); align-items:center; justify-content:center; z-index:3000;">
+  <div style="background:#fff9ef; max-width: 600px; width: 90%; border-radius: 56px; padding: 32px 34px; position: relative; max-height: 80vh; overflow-y: auto;">
+    <button id="closeModalBtn" style="position: absolute; top: 20px; right: 24px; background: #e2d5bc; border: none; width: 40px; height: 40px; border-radius: 50px; font-size: 1.4rem; cursor: pointer;">✕</button>
+    <div id="modalTextContent">
+      <h2 style="color:#2d6e5c;">About Us</h2>
+      <p style="color:#446b5e;">Game Arena is a sanctuary of simple, beautiful web games. We believe in zero-pressure entertainment — each mini-game is crafted to help you unwind, focus, and smile. No timers, no scores, no data collection. Just you and a moment of calm.</p>
+      <p style="margin-top: 16px;">✨ Bubble Sort · Sand Drawing · Leaf Dropping · Zen Ripples · Cloud Catcher — each game opens in its own separate page, designed with love and responsive layouts. Enjoy the peaceful journey.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // MODAL handling for About & Privacy pages (without leaving index, but we keep 'game pages' separate)
+  const modalOverlay = document.getElementById('infoModal');
+  const modalTextDiv = document.getElementById('modalTextContent');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+
+  function showModal(contentHTML) {
+    modalTextDiv.innerHTML = contentHTML;
+    modalOverlay.style.display = 'flex';
+  }
+
+  function hideModal() {
+    modalOverlay.style.display = 'none';
+  }
+
+  // About content (full about us)
+  const aboutHTML = `
+    <h2 style="color:#2d6e5c; font-size: 1.9rem;">📖 About Game Arena</h2>
+    <p style="color:#446b5e; margin-top: 16px;"><strong>Game Arena</strong> is a cozy collection of 5 handcrafted relaxation games. Each title is designed to help you de-stress — no invasive ads, no data tracking, just simple joy.</p>
+    <p style="margin-top: 12px;">🎮 <strong>Our Philosophy</strong><br>We believe digital play should feel like a deep breath. That's why all games are completely client-side, respect your privacy, and offer endless, non-competitive fun.</p>
+    <p style="margin-top: 12px;">🌱 <strong>The Games</strong><br>✨ Bubble Sort — pour & match colorful liquids<br>✨ Sand Drawing — create zen patterns<br>✨ Leaf Dropping — watch autumn leaves fall<br>✨ Zen Ripples — tap for expanding water rings<br>✨ Cloud Catcher — catch soft clouds</p>
+    <p style="margin-top: 12px;">📍 Each game opens as a separate HTML page (bubble-game.html, sand-game.html, etc.). Fully responsive, mobile-friendly, and built with HTML/CSS/JS.</p>
+    <p style="margin-top: 20px; border-top: 1px solid #edd9b0; padding-top: 16px;">🧘‍♂️ Made for calm minds — enjoy the arena.</p>
+  `;
+
+  const privacyHTML = `
+    <h2 style="color:#2d6e5c; font-size: 1.9rem;">🔒 Privacy Policy</h2>
+    <p style="margin-top: 16px;"><strong>Zero data collection guarantee</strong> — Game Arena does not track, store, or share any personal information. We don't use cookies, analytics, or third-party trackers.</p>
+    <p style="margin-top: 12px;">🍃 <strong>Local & Safe:</strong> All games run entirely in your browser. No game state or personal data leaves your device. You remain anonymous at all times.</p>
+    <p style="margin-top: 12px;">📁 <strong>External Links:</strong> Our site may contain links to external pages (only game pages). We are not responsible for privacy practices of those domains, but all game files are self-contained within this project.</p>
+    <p style="margin-top: 12px;">👶 <strong>Children's Privacy:</strong> Suitable for all ages. No data collected = no risk.</p>
+    <p style="margin-top: 12px;">✉️ <strong>Contact:</strong> If you have any privacy questions, feel free to reach out via email: privacy@gamearena.demo (example).</p>
+    <p style="margin-top: 20px; background:#f2efdf; border-radius: 28px; padding: 12px;">✅ Last updated: June 2025 — Game Arena is fully GDPR & CCPA compliant by design (no data processing).</p>
+  `;
+
+  // attach modal triggers
+  document.getElementById('aboutLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    showModal(aboutHTML);
+  });
+  document.getElementById('privacyLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    showModal(privacyHTML);
+  });
+  document.getElementById('footerAbout').addEventListener('click', (e) => {
+    e.preventDefault();
+    showModal(aboutHTML);
+  });
+  document.getElementById('footerPrivacy').addEventListener('click', (e) => {
+    e.preventDefault();
+    showModal(privacyHTML);
+  });
+  document.getElementById('homeLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  closeModalBtn.addEventListener('click', hideModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) hideModal();
+  });
+
+  // Ensure that clicking on game cards leads to separate pages (already linked with href)
+  // we add little console info and also prevent default issues for demo: but all hrefs point to actual pages.
+  // Since the separate pages are not built yet (but requested index only) we show an overlay info for "game page coming soon" 
+  // BUT the requirement: "index page does not contain any game only game list ... each game page separately" => we need informative placeholders if pages missing.
+  // But to be user-friendly: when a game card is clicked and the separate HTML page doesn't exist (404), we can optionally intercept and show friendly message.
+  // For proper UX we let the browser attempt to load the page, but since user will later create those files, we add a small interceptor for demo purposes? 
+  // Actually for cleaner experience: we inform that each game file will be created separately but to avoid 404 we add a small warning on click (but not override all).
+  // But better: we keep default navigation; we can add a message if any file missing. However the spec: "we are building each game page separately" so index only provides links.
+  // I'll add a graceful reminder for unreleased game pages but keep links functional.
+  const gameCards = document.querySelectorAll('.game-card');
+  gameCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      const href = card.getAttribute('href');
+      if (href && (href.endsWith('.html'))) {
+        // allow navigation, but we do nothing extra.
+        console.log(`Navigating to ${href} — create that file to play.`);
+      }
+    });
+  });
+</script>
+
+<style>
+  .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+  }
+  /* additional polish */
+  .game-card {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+  .play-tag::after {
+    content: "→";
+    opacity: 0;
+    transition: 0.2s;
+  }
+  .game-card:hover .play-tag::after {
+    opacity: 1;
+    margin-left: 6px;
+  }
+</style>
 </body>
 </html>
